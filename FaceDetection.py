@@ -5,15 +5,17 @@ from time import sleep
 import gpiozero
 pigpioFactory = gpiozero.pins.pigpio.PiGPIOFactory()
 servo = gpiozero.AngularServo(2, min_angle=0, max_angle = 180, pin_factory=pigpioFactory)
-right = gpiozero.LED(3)
-left = gpiozero.LED(4)
+vertServo = gpiozero.AngularServo(3, min_angle=0, max_angle = 180)
+motor = gpiozero.Motor(forward=4)
+
 angle = 90
 middle = 0
-face_cascade = cv2.CascadeClassifier("./opencv-4.x/data/haarcascades/haarcascade_frontalface_alt2.xml")
-def SetAngleX(angle,delay = 0.2):
+inc = 0
+difference = 0
+face_cascade = cv2.CascadeClassifier("../opencv-4.x/data/haarcascades/haarcascade_frontalface_default.xml")
+def SetAngleX(angle,delay = 0):
     if angle >= 0 and angle <= 180:
         servo.angle = angle
-        # sleep(delay)
 def detect_face(img):
     global middle,angle
     coord = face_cascade.detectMultiScale(img)
@@ -23,10 +25,9 @@ def detect_face(img):
         middle = x+(w/2)
     if len(coord) > 0:
         print(middle, angle)
-        if middle < 300:
-            angle -= 1
-        elif middle > 340:
-            angle += 1
+        difference = middle - 320
+        if middle < 300 or middle > 340:
+            angle += difference / 40
         SetAngleX(angle)
     return img
 SetAngleX(90,1)
@@ -44,5 +45,6 @@ while True:
         break
 GPIO.cleanup()
 servo.close()
+vertServo.close()
 picam2.stop()
 cv2.destroyAllWindows()
