@@ -15,7 +15,7 @@ middle = 0
 midY = 0
 inc = 0
 difference = 0
-face_cascade = cv2.CascadeClassifier("../opencv-4.x/data/haarcascades/haarcascade_frontalface_default.xml")
+face_cascade = cv2.CascadeClassifier("./opencv-4.x/data/haarcascades/haarcascade_frontalface_default.xml")
 def SetAngleX(angle,delay = 0):
     if angle >= 0 and angle <= 180:
         servo.angle = angle
