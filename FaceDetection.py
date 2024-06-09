@@ -37,6 +37,7 @@ def detect_face(img):
     return img
 
 SetAngleX(90,1)
+relServo.angle = 180
 sleep(1)
 picam2 = Picamera2()
 picam2.preview_configuration.main.size=(640,400)
@@ -53,9 +54,9 @@ while True:
     if button.is_pressed:
         print("hi")
         motor.on()
-        relServo.angle = 90
-        sleep(1)
         relServo.angle = 0
+        sleep(1)
+        relServo.angle = 180
         sleep(2)
         motor.off()
 GPIO.cleanup()
