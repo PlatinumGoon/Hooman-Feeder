@@ -4,8 +4,8 @@ import RPi.GPIO as GPIO
 from time import sleep
 import gpiozero
 pigpioFactory = gpiozero.pins.pigpio.PiGPIOFactory()
-servo = gpiozero.AngularServo(2, min_angle=0, max_angle = 180, pin_factory=pigpioFactory)
-vertServo = gpiozero.AngularServo(3, min_angle=0, max_angle = 180, pin_factory=pigpioFactory)
+servo = gpiozero.AngularServo(3, min_angle=0, max_angle = 180, pin_factory=pigpioFactory)
+vertServo = gpiozero.AngularServo(2, min_angle=0, max_angle = 180, pin_factory=pigpioFactory)
 relServo = gpiozero.AngularServo(27, min_angle=0, max_angle = 180, pin_factory=pigpioFactory)
 motor = gpiozero.LED(4)
 button = gpiozero.Button(17)
@@ -30,10 +30,12 @@ def detect_face(img):
         print(middle, angle)
         difference = middle - 320
         if middle < 300 or middle > 340:
-            angle += difference / 40
-        vertservo.angle = midY / 200 * 15 + 30
-        SetAngleX(angle)
+            angle += (difference / 320 * 4) ** 2 * (difference / abs(difference))
+        angle = max(0, min(angle, 180))
+        #vertServo.angle = midY / 200 * 15 + 30
+        servo.angle = angle
     return img
+
 SetAngleX(90,1)
 sleep(1)
 picam2 = Picamera2()
